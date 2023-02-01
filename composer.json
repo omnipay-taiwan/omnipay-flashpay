@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "omnipay/common": "^3.0"
+        "omnipay/common": "^3.0",
+        "flashpay/lib": "^1.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

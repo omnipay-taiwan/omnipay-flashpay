@@ -13,23 +13,48 @@ class GatewayTest extends GatewayTestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        //5521-9944-4400-1849
+        //05/23
+        //616
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
-
-        $this->options = [
-            'amount' => '10.00',
-            'card' => $this->getValidCard(),
-        ];
+        $this->gateway->initialize([
+            'HashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
+            'HashIV' => 'JX3YbUmQYZm6ZTAZ',
+            'mer_id' => 'HT00000003',
+        ]);
     }
 
-    public function testAuthorize()
+    public function testPurchase()
     {
-        $this->setMockHttpResponse('AuthorizeSuccess.txt');
+        $response = $this->gateway->purchase([
+            'transactionId' => '270397',
+            'amount' => '405',
+            'description' => '網路商品一批 405',
+            'ord_time' => '2022-01-15 10:31:37',
+            'return_url' => 'https://fl-pay.com/client_url',
+            'notify_url' => 'https://fl-pay.com/return_url',
+        ])->send();
 
-        $response = $this->gateway->authorize($this->options)->send();
-
-        $this->assertTrue($response->isSuccessful());
-        $this->assertEquals('1234', $response->getTransactionReference());
-        $this->assertNull($response->getMessage());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertEquals([
+            'HashKey' => 'eppdKQ9h36nC4yk8e7B8U4aVsHF3hgxI',
+            'HashIv' => 's2EKlch9pDgyFeI3',
+            'mer_id' => 'TES0067999',
+            'stage_id' => null,
+            'sto_id' => null,
+            'ord_no' => '270397',
+            'ord_time' => '2022-01-15 10:31:37',
+            'tx_type' => '101',
+            'pay_type' => '1',
+            'amt' => 405,
+            'cur' => 'NTD',
+            'order_desc' => '網路商品一批 405',
+            'install_period' => null,
+            'use_redeem' => null,
+            'cell_phone_no' => null,
+            'return_url' => 'https://fl-pay.com/return_url',
+            'client_url' => 'https://fl-pay.com/client_url',
+        ], $response->getData());
+        $response->getRedirectResponse();
     }
 }

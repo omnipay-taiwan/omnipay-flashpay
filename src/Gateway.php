@@ -3,13 +3,15 @@
 namespace Omnipay\FlashPay;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\FlashPay\Message\AuthorizeRequest;
+use Omnipay\FlashPay\Message\PurchaseRequest;
 
 /**
  * FlashPay Gateway
  */
 class Gateway extends AbstractGateway
 {
+    use Traits\HasFlashPay;
+
     public function getName()
     {
         return 'FlashPay';
@@ -18,26 +20,18 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return [
-            'key' => '',
+            'hashKey' => '',
+            'hashIv' => '',
+            'mer_id' => '',
             'testMode' => false,
         ];
     }
 
-    public function getKey()
-    {
-        return $this->getParameter('key');
-    }
-
-    public function setKey($value)
-    {
-        return $this->setParameter('key', $value);
-    }
-
     /**
-     * @return Message\AuthorizeRequest
+     * @return PurchaseRequest
      */
-    public function authorize(array $options = [])
+    public function purchase(array $options = [])
     {
-        return $this->createRequest(AuthorizeRequest::class, $options);
+        return $this->createRequest(PurchaseRequest::class, $options);
     }
 }
