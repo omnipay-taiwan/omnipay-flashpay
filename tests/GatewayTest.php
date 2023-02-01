@@ -13,9 +13,6 @@ class GatewayTest extends GatewayTestCase
     public function setUp(): void
     {
         parent::setUp();
-        //5521-9944-4400-1849
-        //05/23
-        //616
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->initialize([
             'HashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
@@ -26,6 +23,10 @@ class GatewayTest extends GatewayTestCase
 
     public function testPurchase()
     {
+        // 5521-9944-4400-1849
+        // 05/23
+        // 616
+
         $response = $this->gateway->purchase([
             'transactionId' => '270397',
             'amount' => '405',
@@ -37,9 +38,9 @@ class GatewayTest extends GatewayTestCase
 
         $this->assertFalse($response->isSuccessful());
         $this->assertEquals([
-            'HashKey' => 'eppdKQ9h36nC4yk8e7B8U4aVsHF3hgxI',
-            'HashIv' => 's2EKlch9pDgyFeI3',
-            'mer_id' => 'TES0067999',
+            'hashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
+            'hashIv' => 'JX3YbUmQYZm6ZTAZ',
+            'mer_id' => 'HT00000003',
             'stage_id' => null,
             'sto_id' => null,
             'ord_no' => '270397',
@@ -55,6 +56,11 @@ class GatewayTest extends GatewayTestCase
             'return_url' => 'https://fl-pay.com/return_url',
             'client_url' => 'https://fl-pay.com/client_url',
         ], $response->getData());
-        $response->getRedirectResponse();
+        $redirectData = ($response->getRedirectData());
+        self::assertArrayHasKey('ver', $redirectData);
+        self::assertArrayHasKey('mid', $redirectData);
+        self::assertArrayHasKey('dat', $redirectData);
+        self::assertArrayHasKey('key', $redirectData);
+        self::assertArrayHasKey('chk', $redirectData);
     }
 }

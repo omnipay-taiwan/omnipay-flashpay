@@ -17,8 +17,8 @@ class PurchaseRequest extends AbstractRequest
         $this->validate('hashKey', 'hashIv', 'mer_id', 'transactionId', 'amount', 'description', 'notifyUrl');
 
         return [
-            'HashKey' => $this->getHashKey(),
-            'HashIv' => $this->getHashIv(),
+            'hashKey' => $this->getHashKey(),
+            'hashIv' => $this->getHashIv(),
             'mer_id' => $this->getMerId(),
             'stage_id' => $this->getStageId(),
             'sto_id' => $this->getStoId(),

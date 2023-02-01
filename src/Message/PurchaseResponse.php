@@ -3,12 +3,11 @@
 namespace Omnipay\FlashPay\Message;
 
 use DateTime;
-use Exception;
+use DateTimeZone;
 use FlashPay\Lib\Services\OrderService;
 use FlashPay\Lib\Services\UtilService;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 /**
  * Response
@@ -27,9 +26,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     public function getRedirectUrl()
     {
-        return $this->request->getTestMode()
-            ? UtilService::$stageURL
-            : UtilService::$ProdutionURL;
+        $url = $this->request->getTestMode() ? UtilService::$stageURL : UtilService::$ProdutionURL;
+
+        return $url.'/trade';
     }
 
     public function getRedirectMethod()
@@ -37,27 +36,49 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return 'POST';
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getRedirectResponse()
+    public function getRedirectData(): array
     {
-        $this->validateRedirect();
-        $data = $this->data;
+        $data = array_filter($this->getData());
 
-        if (! $data['ord_time'] instanceof DateTime) {
-            $data['ord_time'] = new DateTime($data['ord_time']);
-        }
+        $datetime = $this->getOrderTime($data);
+        $timezone = new DateTimeZone('Asia/Taipei');
+        $datetime->setTimezone($timezone);
+        $data['ord_time'] = $datetime;
 
-        $orderService = new OrderService([
-            'hashKey' => $data['HashKey'],
-            'hashIv' => $data['HashIv'],
-        ]);
+        $orderService = new OrderService(['hashKey' => $data['hashKey'], 'hashIv' => $data['hashIv']]);
 
-        unset($data['HashKey'], $data['HashIv']);
+        unset($data['hashKey'], $data['hashIv']);
 
-        return new HttpResponse(
+        return $this->parseFormData(
             $orderService->checkout($orderService->createOrder($data), $this->getRedirectUrl())
         );
+    }
+
+    private function parseFormData(string $output)
+    {
+        $data = [];
+
+        preg_match_all('/<input[^>]+>/', $output, $matches);
+        foreach ($matches[0] as $input) {
+            preg_match('/<input.+name="(?<name>[^"]+)" value="(?<value>[^"]+)"/', $input, $matched);
+            if ($matched) {
+                $data[$matched['name']] = $matched['value'];
+            }
+        }
+
+        return $data;
+    }
+
+    private function getOrderTime($data): DateTime
+    {
+        if (empty($data['ord_time'])) {
+            return new DateTime();
+        }
+
+        if (! $data['ord_time'] instanceof DateTime) {
+            return new DateTime($data['ord_time']);
+        }
+
+        return $data['ord_time'];
     }
 }
