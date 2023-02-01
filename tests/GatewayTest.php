@@ -2,6 +2,8 @@
 
 namespace Omnipay\FlashPay\Tests;
 
+use FlashPay\Lib\obj\AesObj;
+use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\FlashPay\Gateway;
 use Omnipay\Tests\GatewayTestCase;
 
@@ -38,8 +40,8 @@ class GatewayTest extends GatewayTestCase
 
         $this->assertFalse($response->isSuccessful());
         $this->assertEquals([
-            'hashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
-            'hashIv' => 'JX3YbUmQYZm6ZTAZ',
+            'hashKey' => $this->gateway->getHashKey(),
+            'hashIv' => $this->gateway->getHashIv(),
             'mer_id' => 'HT00000003',
             'stage_id' => null,
             'sto_id' => null,
@@ -62,5 +64,56 @@ class GatewayTest extends GatewayTestCase
         self::assertArrayHasKey('dat', $redirectData);
         self::assertArrayHasKey('key', $redirectData);
         self::assertArrayHasKey('chk', $redirectData);
+    }
+
+    public function testAcceptNotification()
+    {
+        $options = $this->encrypt([
+            'ver' => '1.0.0',
+            'tx_type' => 104,
+            'mer_id' => $this->gateway->getMerId(),
+            'sto_id' => '',
+            'order_no' => 'FP2302020600004133',
+            'order_status' => '02',
+            'ord_no' => '11245678',
+            'ord_time' => '2023-02-02 06:23:08',
+            'ret_code' => '00',
+            'ret_msg' => '交易成功(Approved or completed successfully',
+            'purchase_date' => '2023-02-02 06:23:49',
+            'auth_id_resp' => '952931',
+            'amt' => '0.00',
+            'tx_amt' => '100.00',
+            'tot_pay_amt' => '0.00',
+            'install_period' => '0',
+            'use_redeem' => '',
+            'return_url' => 'https://fl-pay.com/return_url',
+            'client_url' => 'https://fl-pay.com/client_url',
+            'pay_type' => '0',
+        ]);
+
+        $request = $this->gateway->acceptNotification($options);
+        self::assertEquals('交易成功(Approved or completed successfully', $request->getMessage());
+        self::assertEquals(NotificationInterface::STATUS_COMPLETED, $request->getTransactionStatus());
+        self::assertEquals('FP2302020600004133', $request->getTransactionReference());
+
+        $response = $request->send();
+
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('11245678', $response->getTransactionId());
+        self::assertEquals('00', $response->getCode());
+        self::assertEquals('1|OK', $response->getReply());
+    }
+
+    private function encrypt($input)
+    {
+        $hashKey = $this->gateway->getHashKey();
+        $hashIv = $this->gateway->getHashIv();
+        $merId = $this->gateway->getMerId();
+
+        $AES = new AesObj($hashKey, $hashIv);
+        $encrypt = $AES->getEnData($merId, json_encode($input));
+        unset($encrypt['mid'], $encrypt['key']);
+
+        return $encrypt;
     }
 }
