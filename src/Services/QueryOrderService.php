@@ -5,6 +5,7 @@ namespace Omnipay\FlashPay\Services;
 use Exception;
 use FlashPay\Lib\obj\AesObj;
 use FlashPay\Lib\Services\FeedbackService;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Http\Client;
 
 class QueryOrderService extends AesObj
@@ -54,6 +55,11 @@ class QueryOrderService extends AesObj
     public function run($request, $url)
     {
         $response = $this->client->request('POST', $url, ['Content-Type' => 'application/json'], $request);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new InvalidRequestException($response->getReasonPhrase());
+        }
+
         $returnDate = (string) $response->getBody();
         $feedback = new FeedbackService($this->getHashKey(), $this->getHashIv(), $returnDate);
 
