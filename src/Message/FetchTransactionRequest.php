@@ -36,7 +36,7 @@ class FetchTransactionRequest extends AbstractRequest
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      * @return FetchTransactionResponse
      */
     public function sendData($data)
@@ -45,12 +45,12 @@ class FetchTransactionRequest extends AbstractRequest
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      * @return string
      */
     protected function query(array $data)
     {
-        $endpoint = $this->getTestMode() ? UtilService::$ProdutionURL : UtilService::$stageURL;
+        $endpoint = $this->getTestMode() ? UtilService::$stageURL : UtilService::$ProdutionURL;
         $queryOrderService = new QueryOrderService($this->httpClient, [
             'hashKey' => $data['hashKey'],
             'hashIv' => $data['hashIv'],

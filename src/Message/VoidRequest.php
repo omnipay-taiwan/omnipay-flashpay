@@ -44,7 +44,7 @@ class VoidRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $endpoint = $this->getTestMode() ? UtilService::$ProdutionURL : UtilService::$stageURL;
+        $endpoint = $this->getTestMode() ? UtilService::$stageURL : UtilService::$ProdutionURL;
         $doTradeService = new DoTradeService($this->httpClient, [
             'hashKey' => $data['hashKey'],
             'hashIv' => $data['hashIv'],
