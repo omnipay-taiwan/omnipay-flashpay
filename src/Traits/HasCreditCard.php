@@ -4,6 +4,10 @@ namespace Omnipay\FlashPay\Traits;
 
 trait HasCreditCard
 {
+    use HasOrdNo;
+    use HasAmt;
+    use HasTxType;
+
     /**
      * stage_id "string(64)" "暫存編號" "請輸入空值"
      */
@@ -31,19 +35,6 @@ trait HasCreditCard
     }
 
     /**
-     * ord_no "string(32)" "訂單編號每筆訂單編號，不可重複" "270397"
-     */
-    public function setOrdNo($value)
-    {
-        return $this->setTransactionId($value);
-    }
-
-    public function getOrdNo()
-    {
-        return $this->getTransactionId();
-    }
-
-    /**
      * ord_time "string(32)" "訂單時間" "格式 YYYY-MM-DD hh:mm:ss" "2022-01-15 10:31:37"
      */
     public function setOrdTime($value)
@@ -57,19 +48,6 @@ trait HasCreditCard
     }
 
     /**
-     * tx_type "int" "交易類別填入固定值 101" "101"
-     */
-    public function setTxType($value)
-    {
-        return $this->setParameter('tx_type', $value);
-    }
-
-    public function getTxType()
-    {
-        return $this->getParameter('tx_type');
-    }
-
-    /**
      * pay_type "int" "支付類別" "1-信用卡,2-銀聯卡(暫時尚未開放銀聯卡)" 1
      */
     public function setPayType($value)
@@ -80,19 +58,6 @@ trait HasCreditCard
     public function getPayType()
     {
         return $this->getParameter('pay_type');
-    }
-
-    /**
-     * amt "double" "交易金額" "填入交易金額，單位(元)" "405"
-     */
-    public function setAmt($value)
-    {
-        return $this->setAmount($value);
-    }
-
-    public function getAmt()
-    {
-        return $this->getAmount();
     }
 
     /**

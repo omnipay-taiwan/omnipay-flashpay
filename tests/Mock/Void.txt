@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Server: Apache
+Date: Sun, 11 May 2014 21:17:31 GMT
+Content-Type: application/json; charset=utf-8
+Status: 200 OK
+
+{"ver":"1.0.0","mer_id":"TES0067999","tx_type":"8","tot_pay_amt":"0.00","tot_ret_amt":"0.00","can_pay_amt":"0.00","can_ret_amt":"0.00","ord_no":"120","ord_time":"2023-02-02 06:23:08","order_status":"12","tx_status":"01","settle_result":"","ret_code":"00","ret_msg":"交易成功(Approved or completed successfully)" }

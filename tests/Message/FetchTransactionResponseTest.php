@@ -17,7 +17,7 @@ class FetchTransactionResponseTest extends TestCase
         $this->assertOrderStatus($code, $expected);
     }
 
-    protected function orderStatusProvider()
+    public function orderStatusProvider()
     {
         return [
             ['00', 'pending'],

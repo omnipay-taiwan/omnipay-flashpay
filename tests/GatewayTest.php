@@ -3,6 +3,7 @@
 namespace Omnipay\FlashPay\Tests;
 
 use FlashPay\Lib\obj\AesObj;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\FlashPay\Gateway;
 use Omnipay\Tests\GatewayTestCase;
@@ -117,6 +118,29 @@ class GatewayTest extends GatewayTestCase
         self::assertEquals('120', $response->getTransactionId());
         self::assertEquals('FP2302020600004133', $response->getTransactionReference());
         self::assertEquals('交易成功(Approved or completed successfully', $response->getMessage());
+    }
+
+    public function testVoid()
+    {
+        $this->getMockClient()->addResponse($this->getMockHttpResponse('Void.txt'));
+        $options = ['transactionId' => '120', 'amount' => '100'];
+
+        $response = $this->gateway->void($options)->send();
+        self::assertFalse($response->isSuccessful());
+        self::assertFalse($response->isPending());
+        self::assertFalse($response->isRedirect());
+        self::assertTrue($response->isCancelled());
+    }
+
+    public function testVoidError()
+    {
+        $this->expectException(InvalidRequestException::class);
+        $this->expectExceptionMessage('交易資料狀態不符');
+
+        $this->getMockClient()->addResponse($this->getMockHttpResponse('VoidError.txt'));
+        $options = ['transactionId' => '120', 'amount' => '100'];
+
+        $this->gateway->void($options)->send();
     }
 
     private function encrypt($input)

@@ -5,15 +5,19 @@ namespace Omnipay\FlashPay\Message;
 use FlashPay\Lib\Services\UtilService;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\FlashPay\Services\QueryOrderService;
+use Omnipay\FlashPay\Services\DoTradeService;
+use Omnipay\FlashPay\Traits\HasAmt;
 use Omnipay\FlashPay\Traits\HasDecode;
 use Omnipay\FlashPay\Traits\HasFlashPay;
 use Omnipay\FlashPay\Traits\HasOrdNo;
+use Omnipay\FlashPay\Traits\HasTxType;
 
-class FetchTransactionRequest extends AbstractRequest
+class VoidRequest extends AbstractRequest
 {
     use HasFlashPay;
     use HasOrdNo;
+    use HasTxType;
+    use HasAmt;
     use HasDecode;
 
     /**
@@ -23,39 +27,32 @@ class FetchTransactionRequest extends AbstractRequest
      */
     public function getData()
     {
-        $this->validate('mer_id', 'transactionId');
-
-        $output = $this->query([
+        return [
             'hashKey' => $this->getHashKey(),
             'hashIv' => $this->getHashIv(),
             'mer_id' => $this->getMerId(),
             'ord_no' => $this->getTransactionId(),
-        ]);
-
-        return $this->decode($output);
+            'tx_type' => $this->getTxType() ?? 8,
+            'amt' => (int) $this->getAmount(),
+        ];
     }
 
     /**
-     * @param  array  $data
-     * @return FetchTransactionResponse
+     * @return VoidResponse
+     *
+     * @throws InvalidRequestException
      */
     public function sendData($data)
     {
-        return $this->response = new FetchTransactionResponse($this, $data);
-    }
-
-    /**
-     * @param  array  $data
-     * @return string
-     */
-    protected function query(array $data)
-    {
         $endpoint = $this->getTestMode() ? UtilService::$ProdutionURL : UtilService::$stageURL;
-        $queryOrderService = new QueryOrderService($this->httpClient, [
+        $doTradeService = new DoTradeService($this->httpClient, [
             'hashKey' => $data['hashKey'],
             'hashIv' => $data['hashIv'],
         ]);
 
-        return $queryOrderService->queryOrder($data['mer_id'], $data['ord_no'], $endpoint);
+        return $this->response = new VoidResponse(
+            $this,
+            $this->decode($doTradeService->cancelAuth($data['mer_id'], $data['ord_no'], $data['amt'], $endpoint))
+        );
     }
 }

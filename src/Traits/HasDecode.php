@@ -21,6 +21,10 @@ trait HasDecode
             throw new InvalidRequestException(json_last_error_msg().': '.$input);
         }
 
+        if ($data['ret_code'] !== '00') {
+            throw new InvalidRequestException($data['ret_msg']);
+        }
+
         return $data;
     }
 }

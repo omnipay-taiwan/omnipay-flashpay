@@ -9,6 +9,7 @@ use Omnipay\Common\Message\RequestInterface;
 use Omnipay\FlashPay\Message\AcceptNotificationRequest;
 use Omnipay\FlashPay\Message\FetchTransactionRequest;
 use Omnipay\FlashPay\Message\PurchaseRequest;
+use Omnipay\FlashPay\Message\VoidRequest;
 
 /**
  * FlashPay Gateway
@@ -63,5 +64,10 @@ class Gateway extends AbstractGateway
     public function fetchTransaction(array $options = [])
     {
         return $this->createRequest(FetchTransactionRequest::class, $options);
+    }
+
+    public function void(array $options = [])
+    {
+        return $this->createRequest(VoidRequest::class, $options);
     }
 }
