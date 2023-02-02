@@ -27,27 +27,27 @@ class AesObj
         return $string;
     }
 
-     public function create_mpg_aes_encrypt($parameter = '')
-     {
-         if (empty($this->getHashKey()) || empty($this->getHashIv())) {
-             throw new Exception('key or vi is null', 400);
-         }
-         $return_str = $parameter;
+    public function create_mpg_aes_encrypt($parameter = '')
+    {
+        if (empty($this->getHashKey()) || empty($this->getHashIv())) {
+            throw new Exception('key or vi is null', 400);
+        }
+        $return_str = $parameter;
 
-         return trim(bin2hex(openssl_encrypt(self::addpadding($return_str),
-             $this->method, $this->getHashKey(), OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->getHashIv())));
-     }
+        return trim(bin2hex(openssl_encrypt(self::addpadding($return_str),
+            $this->method, $this->getHashKey(), OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->getHashIv())));
+    }
 
-     public function create_mpg_aes_decrypt($parameter = '')
-     {
-         if (empty($this->getHashKey()) || empty($this->getHashIv())) {
-             throw new Exception('key or vi is null', 400);
-         }
-         $return_str = $parameter;
+    public function create_mpg_aes_decrypt($parameter = '')
+    {
+        if (empty($this->getHashKey()) || empty($this->getHashIv())) {
+            throw new Exception('key or vi is null', 400);
+        }
+        $return_str = $parameter;
 
-         return openssl_decrypt(hex2bin($return_str),
-             $this->method, $this->getHashKey(), OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->getHashIv());
-     }
+        return openssl_decrypt(hex2bin($return_str),
+            $this->method, $this->getHashKey(), OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->getHashIv());
+    }
 
     public function getHASH($source)
     {

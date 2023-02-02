@@ -27,8 +27,7 @@
     },
     "autoload": {
         "files": [
-            "lib/AesObj.php",
-            "lib/QueryOrderService.php"
+            "lib/AesObj.php"
         ],
         "psr-4": {
             "Omnipay\\FlashPay\\": "src"

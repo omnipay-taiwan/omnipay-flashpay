@@ -49,8 +49,10 @@ class FetchTransactionRequest extends AbstractRequest
     protected function query($data)
     {
         $endpoint = $this->getTestMode() ? UtilService::$ProdutionURL : UtilService::$stageURL;
-        $queryOrderService = new QueryOrderService(['hashKey' => $data['hashKey'], 'hashIv' => $data['hashIv']]);
-        $queryOrderService->setClient($this->httpClient);
+        $queryOrderService = new QueryOrderService($this->httpClient, [
+            'hashKey' => $data['hashKey'],
+            'hashIv' => $data['hashIv'],
+        ]);
 
         return $queryOrderService->queryOrder($data['mer_id'], $data['ord_no'], $endpoint);
     }
