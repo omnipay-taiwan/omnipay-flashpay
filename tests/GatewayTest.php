@@ -101,7 +101,7 @@ class GatewayTest extends GatewayTestCase
 
         self::assertTrue($response->isSuccessful());
         self::assertEquals('11245678', $response->getTransactionId());
-        self::assertEquals('00', $response->getCode());
+        self::assertEquals('02', $response->getCode());
         self::assertEquals('1|OK', $response->getReply());
     }
 
@@ -113,7 +113,7 @@ class GatewayTest extends GatewayTestCase
 
         $response = $this->gateway->fetchTransaction($options)->send();
         self::assertTrue($response->isSuccessful());
-        self::assertEquals('00', $response->getCode());
+        self::assertEquals('02', $response->getCode());
         self::assertEquals('120', $response->getTransactionId());
         self::assertEquals('FP2302020600004133', $response->getTransactionReference());
         self::assertEquals('交易成功(Approved or completed successfully', $response->getMessage());

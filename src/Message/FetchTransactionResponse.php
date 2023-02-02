@@ -6,14 +6,24 @@ use Omnipay\Common\Message\AbstractResponse;
 
 class FetchTransactionResponse extends AbstractResponse
 {
+    public function isPending()
+    {
+        return in_array($this->getCode(), ['00', 'ZP'], true);
+    }
+
     public function isSuccessful()
     {
-        return $this->getCode() === '00';
+        return in_array($this->getCode(), ['02', '03', '04'], true);
+    }
+
+    public function isCancelled()
+    {
+        return in_array($this->getCode(), ['06', '08', '12'], true);
     }
 
     public function getCode()
     {
-        return $this->data['ret_code'];
+        return $this->data['order_status'];
     }
 
     public function getTransactionId()

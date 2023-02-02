@@ -8,7 +8,15 @@ class AcceptNotificationResponse extends FetchTransactionResponse implements Not
 {
     public function getTransactionStatus()
     {
-        return $this->isSuccessful() ? self::STATUS_COMPLETED : self::STATUS_FAILED;
+        if ($this->isPending()) {
+            return self::STATUS_PENDING;
+        }
+
+        if ($this->isSuccessful()) {
+            return self::STATUS_COMPLETED;
+        }
+
+        return self::STATUS_FAILED;
     }
 
     public function getReply()

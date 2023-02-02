@@ -14,12 +14,12 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
-    public function isSuccessful(): bool
+    public function isSuccessful()
     {
         return false;
     }
 
-    public function isRedirect(): bool
+    public function isRedirect()
     {
         return true;
     }
@@ -36,7 +36,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return 'POST';
     }
 
-    public function getRedirectData(): array
+    public function getRedirectData()
     {
         $data = array_filter($this->getData());
 
@@ -69,7 +69,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return $data;
     }
 
-    private function getOrderTime($data): DateTime
+    private function getOrderTime(array $data)
     {
         if (empty($data['ord_time'])) {
             return new DateTime();
