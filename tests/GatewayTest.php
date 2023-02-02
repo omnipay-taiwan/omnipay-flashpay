@@ -5,7 +5,6 @@ namespace Omnipay\FlashPay\Tests;
 use FlashPay\Lib\obj\AesObj;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\FlashPay\Gateway;
-use Omnipay\FlashPay\Message\FetchTransactionRequest;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
@@ -16,6 +15,7 @@ class GatewayTest extends GatewayTestCase
     public function setUp(): void
     {
         parent::setUp();
+//        $this->gateway = new Gateway(new Client(new \Http\Client\Curl\Client()), $this->getHttpRequest());
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->initialize([
             'HashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
@@ -43,7 +43,7 @@ class GatewayTest extends GatewayTestCase
         $this->assertEquals([
             'hashKey' => $this->gateway->getHashKey(),
             'hashIv' => $this->gateway->getHashIv(),
-            'mer_id' => 'HT00000003',
+            'mer_id' => $this->gateway->getMerId(),
             'stage_id' => null,
             'sto_id' => null,
             'ord_no' => '270397',
@@ -107,7 +107,6 @@ class GatewayTest extends GatewayTestCase
 
     public function testFetchTransaction()
     {
-        FetchTransactionRequest::$mock = true;
         $this->getMockClient()->addResponse($this->getMockHttpResponse('FetchTransaction.txt'));
 
         $options = ['transactionId' => '120'];
