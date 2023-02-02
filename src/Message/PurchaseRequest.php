@@ -3,6 +3,7 @@
 namespace Omnipay\FlashPay\Message;
 
 use DateTime;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\FlashPay\Traits\HasCreditCard;
 use Omnipay\FlashPay\Traits\HasFlashPay;
@@ -12,6 +13,11 @@ class PurchaseRequest extends AbstractRequest
     use HasFlashPay;
     use HasCreditCard;
 
+    /**
+     * @return array
+     *
+     * @throws InvalidRequestException
+     */
     public function getData()
     {
         $this->validate('hashKey', 'hashIv', 'mer_id', 'transactionId', 'amount', 'description', 'notifyUrl');
@@ -37,6 +43,10 @@ class PurchaseRequest extends AbstractRequest
         ];
     }
 
+    /**
+     * @param  array  $data
+     * @return PurchaseResponse
+     */
     public function sendData($data)
     {
         return $this->response = new PurchaseResponse($this, $data);

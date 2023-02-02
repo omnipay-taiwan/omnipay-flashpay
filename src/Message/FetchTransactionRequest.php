@@ -14,17 +14,26 @@ class FetchTransactionRequest extends AbstractRequest
     use HasFlashPay;
     use HasDecode;
 
+    /**
+     * @param  string  $value
+     * @return FetchTransactionRequest
+     */
     public function setOrdNo($value)
     {
         return $this->setTransactionId($value);
     }
 
+    /**
+     * @return string
+     */
     public function getOrdNo()
     {
         return $this->getTransactionId();
     }
 
     /**
+     * @return array
+     *
      * @throws InvalidRequestException
      */
     public function getData()
@@ -41,12 +50,20 @@ class FetchTransactionRequest extends AbstractRequest
         return $this->decode($output);
     }
 
+    /**
+     * @param  array  $data
+     * @return FetchTransactionResponse
+     */
     public function sendData($data)
     {
         return $this->response = new FetchTransactionResponse($this, $data);
     }
 
-    protected function query($data)
+    /**
+     * @param  array  $data
+     * @return string
+     */
+    protected function query(array $data)
     {
         $endpoint = $this->getTestMode() ? UtilService::$ProdutionURL : UtilService::$stageURL;
         $queryOrderService = new QueryOrderService($this->httpClient, [

@@ -4,26 +4,33 @@ namespace Omnipay\FlashPay\Message;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 use FlashPay\Lib\Services\OrderService;
 use FlashPay\Lib\Services\UtilService;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 
-/**
- * Response
- */
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
+    /**
+     * @return false
+     */
     public function isSuccessful()
     {
         return false;
     }
 
+    /**
+     * @return true
+     */
     public function isRedirect()
     {
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getRedirectUrl()
     {
         $endpoint = $this->request->getTestMode() ? UtilService::$stageURL : UtilService::$ProdutionURL;
@@ -31,11 +38,19 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return $endpoint.'/trade';
     }
 
+    /**
+     * @return string
+     */
     public function getRedirectMethod()
     {
         return 'POST';
     }
 
+    /**
+     * @return array
+     *
+     * @throws Exception
+     */
     public function getRedirectData()
     {
         $data = array_filter($this->getData());
@@ -54,6 +69,10 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         );
     }
 
+    /**
+     * @param  string  $output
+     * @return array
+     */
     private function parseFormData(string $output)
     {
         $data = [];
@@ -69,6 +88,12 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return $data;
     }
 
+    /**
+     * @param  array  $data
+     * @return DateTime
+     *
+     * @throws Exception
+     */
     private function getOrderTime(array $data)
     {
         if (empty($data['ord_time'])) {

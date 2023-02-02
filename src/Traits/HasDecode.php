@@ -7,6 +7,9 @@ use Omnipay\Common\Exception\InvalidRequestException;
 trait HasDecode
 {
     /**
+     * @param  string  $input
+     * @return array
+     *
      * @throws InvalidRequestException
      */
     private function decode($input)
