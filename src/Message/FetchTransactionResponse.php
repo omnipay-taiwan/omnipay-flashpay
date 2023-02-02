@@ -13,8 +13,6 @@ class FetchTransactionResponse extends AbstractResponse
 
     public function getCode()
     {
-        var_dump($this->data);
-
         return $this->data['ret_code'];
     }
 
