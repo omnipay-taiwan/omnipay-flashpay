@@ -5,6 +5,7 @@ namespace Omnipay\FlashPay\Tests;
 use FlashPay\Lib\obj\AesObj;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\FlashPay\Gateway;
+use Omnipay\FlashPay\Message\FetchTransactionRequest;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
@@ -15,7 +16,7 @@ class GatewayTest extends GatewayTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway = new StubGateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->initialize([
             'HashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
             'HashIV' => 'JX3YbUmQYZm6ZTAZ',
@@ -104,6 +105,18 @@ class GatewayTest extends GatewayTestCase
         self::assertEquals('1|OK', $response->getReply());
     }
 
+    public function testFetchTransaction()
+    {
+        $options = ['transactionId' => '120'];
+
+        $response = $this->gateway->fetchTransaction($options)->send();
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('00', $response->getCode());
+        self::assertEquals('120', $response->getTransactionId());
+        self::assertEquals('FP2302020600004133', $response->getTransactionReference());
+        self::assertEquals('交易成功(Approved or completed successfully', $response->getMessage());
+    }
+
     private function encrypt($input)
     {
         $hashKey = $this->gateway->getHashKey();
@@ -115,5 +128,21 @@ class GatewayTest extends GatewayTestCase
         unset($encrypt['mid'], $encrypt['key']);
 
         return $encrypt;
+    }
+}
+
+class StubGateway extends Gateway
+{
+    public function fetchTransaction(array $options = [])
+    {
+        return $this->createRequest(StubFetchTransactionRequest::class, $options);
+    }
+}
+
+class StubFetchTransactionRequest extends FetchTransactionRequest
+{
+    protected function fetch($data)
+    {
+        return '{"ver":"1.0.0","mer_id":"HT00000003","tx_type":"104","tx_amt":"100.00","tot_pay_amt":"0.00","tot_ret_amt":"0.00","can_pay_amt":"0.00","can_ret_amt":"0.00","order_no":"FP2302020600004133","ord_no":"120","ord_time":"2023-02-02 06:23:08","order_status":"02","ret_code":"00","ret_msg":"交易成功(Approved or completed successfully","service_fee":"0.00","refund_service_fee":"0.00"}';
     }
 }

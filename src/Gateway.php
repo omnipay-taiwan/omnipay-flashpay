@@ -4,6 +4,7 @@ namespace Omnipay\FlashPay;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\FlashPay\Message\AcceptNotificationRequest;
+use Omnipay\FlashPay\Message\FetchTransactionRequest;
 use Omnipay\FlashPay\Message\PurchaseRequest;
 
 /**
@@ -36,5 +37,10 @@ class Gateway extends AbstractGateway
     public function acceptNotification(array $options = [])
     {
         return $this->createRequest(AcceptNotificationRequest::class, $options);
+    }
+
+    public function fetchTransaction(array $options = [])
+    {
+        return $this->createRequest(FetchTransactionRequest::class, $options);
     }
 }

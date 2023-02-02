@@ -26,9 +26,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     public function getRedirectUrl()
     {
-        $url = $this->request->getTestMode() ? UtilService::$stageURL : UtilService::$ProdutionURL;
+        $endpoint = $this->request->getTestMode() ? UtilService::$stageURL : UtilService::$ProdutionURL;
 
-        return $url.'/trade';
+        return $endpoint.'/trade';
     }
 
     public function getRedirectMethod()
