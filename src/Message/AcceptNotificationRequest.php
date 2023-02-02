@@ -4,19 +4,15 @@ namespace Omnipay\FlashPay\Message;
 
 use Exception;
 use FlashPay\Lib\Services\FeedbackService;
-use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\NotificationInterface;
+use Omnipay\FlashPay\Traits\HasDecode;
 use Omnipay\FlashPay\Traits\HasFlashPay;
 
 class AcceptNotificationRequest extends AbstractRequest implements NotificationInterface
 {
     use HasFlashPay;
-
-    /**
-     * @var mixed
-     */
-    private $data = [];
+    use HasDecode;
 
     public function setVer($value)
     {
@@ -53,22 +49,10 @@ class AcceptNotificationRequest extends AbstractRequest implements NotificationI
      */
     public function getData()
     {
-        if (count($this->data) > 0) {
-            return $this->data;
-        }
-
         $input = http_build_query(['ver' => $this->getVer(), 'dat' => $this->getDat(), 'chk' => $this->getChk()]);
-
         $feedbackService = new FeedbackService($this->getHashKey(), $this->getHashIv(), $input);
-        $output = $feedbackService->getRetrunJson();
-        $output = substr($output, 0, strrpos($output, '}') + 1);
-        $data = json_decode($output, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new InvalidRequestException(json_last_error_msg().': '.$output);
-        }
-
-        return $this->data = $data;
+        return $this->decode($feedbackService->getRetrunJson());
     }
 
     public function sendData($data)

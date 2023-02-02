@@ -6,11 +6,15 @@ use FlashPay\Lib\Services\QueryOrderService;
 use FlashPay\Lib\Services\UtilService;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\FlashPay\Traits\HasDecode;
 use Omnipay\FlashPay\Traits\HasFlashPay;
 
 class FetchTransactionRequest extends AbstractRequest
 {
     use HasFlashPay;
+    use HasDecode;
+
+    public static $mock = false;
 
     public function setOrdNo($value)
     {
@@ -36,14 +40,7 @@ class FetchTransactionRequest extends AbstractRequest
             'ord_no' => $this->getTransactionId(),
         ]);
 
-        $output = substr($output, 0, strrpos($output, '}') + 1);
-        $data = json_decode($output, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new InvalidRequestException(json_last_error_msg().': '.$output);
-        }
-
-        return $data;
+        return $this->decode($output);
     }
 
     public function sendData($data)
@@ -53,6 +50,11 @@ class FetchTransactionRequest extends AbstractRequest
 
     protected function fetch($data)
     {
+        if (self::$mock === true) {
+            $response = $this->httpClient->request('POST', UtilService::$stageURL, $data);
+
+            return (string) $response->getBody();
+        }
         $endpoint = $this->getTestMode() ? UtilService::$ProdutionURL : UtilService::$stageURL;
         $queryOrderService = new QueryOrderService(['hashKey' => $data['hashKey'], 'hashIv' => $data['hashIv']]);
 
