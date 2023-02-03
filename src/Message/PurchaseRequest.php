@@ -32,7 +32,7 @@ class PurchaseRequest extends AbstractRequest
             'ord_time' => $this->getOrdTime() ?? (new DateTime())->format('Y-m-d H:i:s'),
             'tx_type' => $this->getTxType() ?? '101',
             'pay_type' => $this->getPayType() ?? '1',
-            'amt' => (int) $this->getAmount(),
+            'amt' => $this->getAmount(),
             'cur' => $this->getCurrency() ?? 'NTD',
             'order_desc' => $this->getDescription(),
             'install_period' => $this->getInstallPeriod(),

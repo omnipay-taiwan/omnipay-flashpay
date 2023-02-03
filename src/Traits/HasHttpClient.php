@@ -3,10 +3,16 @@
 namespace Omnipay\FlashPay\Traits;
 
 use FlashPay\Lib\Services\FeedbackService;
+use Http\Client\Exception;
 use Omnipay\Common\Exception\InvalidRequestException;
 
 trait HasHttpClient
 {
+    /**
+     * @throws InvalidRequestException
+     * @throws Exception
+     * @throws \Exception
+     */
     public function run($request, $url)
     {
         $response = $this->client->request('POST', $url, ['Content-Type' => 'application/json'], $request);

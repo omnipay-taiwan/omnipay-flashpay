@@ -126,10 +126,9 @@ class GatewayTest extends GatewayTestCase
         $options = ['transactionId' => '120', 'amount' => '100'];
 
         $response = $this->gateway->void($options)->send();
-        self::assertFalse($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
         self::assertFalse($response->isPending());
         self::assertFalse($response->isRedirect());
-        self::assertTrue($response->isCancelled());
     }
 
     public function testVoidError()

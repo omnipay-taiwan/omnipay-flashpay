@@ -33,7 +33,7 @@ class VoidRequest extends AbstractRequest
             'mer_id' => $this->getMerId(),
             'ord_no' => $this->getTransactionId(),
             'tx_type' => $this->getTxType() ?? 8,
-            'amt' => (int) $this->getAmount(),
+            'amt' => $this->getAmount(),
         ];
     }
 
