@@ -51,7 +51,7 @@ class GatewayTest extends GatewayTestCase
             'ord_time' => '2022-01-15 10:31:37',
             'tx_type' => '101',
             'pay_type' => '1',
-            'amt' => 405,
+            'amt' => '405',
             'cur' => 'NTD',
             'order_desc' => '網路商品一批 405',
             'install_period' => null,

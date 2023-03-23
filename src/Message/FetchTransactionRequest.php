@@ -45,7 +45,6 @@ class FetchTransactionRequest extends AbstractRequest
     }
 
     /**
-     * @param  array  $data
      * @return string
      */
     protected function query(array $data)

@@ -6,6 +6,7 @@ use FlashPay\Lib\Services\UtilService;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\FlashPay\Services\DoTradeService;
+use Omnipay\FlashPay\Traits\HasAmount;
 use Omnipay\FlashPay\Traits\HasAmt;
 use Omnipay\FlashPay\Traits\HasDecode;
 use Omnipay\FlashPay\Traits\HasFlashPay;
@@ -19,6 +20,7 @@ class VoidRequest extends AbstractRequest
     use HasTxType;
     use HasAmt;
     use HasDecode;
+    use HasAmount;
 
     /**
      * @return array

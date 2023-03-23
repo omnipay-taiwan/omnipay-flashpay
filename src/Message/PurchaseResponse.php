@@ -70,7 +70,6 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     /**
-     * @param  string  $output
      * @return array
      */
     private function parseFormData(string $output)
@@ -89,7 +88,6 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     /**
-     * @param  array  $data
      * @return DateTime
      *
      * @throws Exception

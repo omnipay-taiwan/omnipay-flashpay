@@ -5,6 +5,7 @@ namespace Omnipay\FlashPay\Message;
 use DateTime;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\FlashPay\Traits\HasAmount;
 use Omnipay\FlashPay\Traits\HasCreditCard;
 use Omnipay\FlashPay\Traits\HasFlashPay;
 
@@ -12,6 +13,7 @@ class PurchaseRequest extends AbstractRequest
 {
     use HasFlashPay;
     use HasCreditCard;
+    use HasAmount;
 
     /**
      * @return array

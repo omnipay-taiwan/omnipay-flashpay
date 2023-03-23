@@ -173,9 +173,4 @@ trait HasCreditCard
     {
         return parent::getReturnUrl();
     }
-
-    public function getAmount()
-    {
-        return $this->getParameter('amount');
-    }
 }

@@ -40,7 +40,6 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  array  $options
      * @return AbstractRequest|RequestInterface
      */
     public function purchase(array $options = [])
@@ -49,7 +48,6 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  array  $options
      * @return AbstractRequest|NotificationInterface
      */
     public function acceptNotification(array $options = [])
@@ -58,7 +56,6 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  array  $options
      * @return AbstractRequest|RequestInterface
      */
     public function fetchTransaction(array $options = [])
