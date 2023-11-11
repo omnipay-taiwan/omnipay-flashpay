@@ -15,65 +15,16 @@ class AcceptNotificationRequest extends AbstractRequest implements NotificationI
     use HasDecode;
 
     /**
-     * @param  string  $value
-     * @return AcceptNotificationRequest
-     */
-    public function setVer($value)
-    {
-        return $this->setParameter('ver', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getVer()
-    {
-        return $this->getParameter('ver');
-    }
-
-    /**
-     * @param  string  $value
-     * @return AcceptNotificationRequest
-     */
-    public function setDat($value)
-    {
-        return $this->setParameter('dat', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDat()
-    {
-        return $this->getParameter('dat');
-    }
-
-    /**
-     * @param  string  $value
-     * @return AcceptNotificationRequest
-     */
-    public function setChk($value)
-    {
-        return $this->setParameter('chk', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getChk()
-    {
-        return $this->getParameter('chk');
-    }
-
-    /**
      * @return array
-     *
      * @throws Exception
      */
     public function getData()
     {
-        $input = http_build_query(['ver' => $this->getVer(), 'dat' => $this->getDat(), 'chk' => $this->getChk()]);
-        $feedbackService = new FeedbackService($this->getHashKey(), $this->getHashIv(), $input);
+        $feedbackService = new FeedbackService(
+            $this->getHashKey(),
+            $this->getHashIv(),
+            http_build_query($this->httpRequest->request->all())
+        );
 
         return $this->decode($feedbackService->getRetrunJson());
     }
@@ -90,9 +41,9 @@ class AcceptNotificationRequest extends AbstractRequest implements NotificationI
     /**
      * @return string
      */
-    public function getTransactionStatus()
+    public function getTransactionId()
     {
-        return $this->getNotificationResponse()->getTransactionStatus();
+        return $this->getNotificationResponse()->getTransactionId();
     }
 
     /**
@@ -101,6 +52,14 @@ class AcceptNotificationRequest extends AbstractRequest implements NotificationI
     public function getTransactionReference()
     {
         return $this->getNotificationResponse()->getTransactionReference();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionStatus()
+    {
+        return $this->getNotificationResponse()->getTransactionStatus();
     }
 
     /**

@@ -93,17 +93,15 @@ class GatewayTest extends GatewayTestCase
             'pay_type' => '0',
         ]);
 
-        $request = $this->gateway->acceptNotification($options);
+        $this->getHttpRequest()->request->add($options);
+        $request = $this->gateway->acceptNotification();
         self::assertEquals('交易成功(Approved or completed successfully', $request->getMessage());
         self::assertEquals(NotificationInterface::STATUS_COMPLETED, $request->getTransactionStatus());
         self::assertEquals('FP2302020600004133', $request->getTransactionReference());
 
-        $response = $request->send();
-
-        self::assertTrue($response->isSuccessful());
-        self::assertEquals('11245678', $response->getTransactionId());
-        self::assertEquals('02', $response->getCode());
-        self::assertEquals('1|OK', $response->getReply());
+        self::assertEquals('11245678', $request->getTransactionId());
+        self::assertEquals('FP2302020600004133', $request->getTransactionReference());
+        self::assertEquals('1|OK', $request->getReply());
     }
 
     public function testFetchTransaction()
