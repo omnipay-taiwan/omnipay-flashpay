@@ -3,7 +3,7 @@
 namespace Omnipay\FlashPay\Tests;
 
 use FlashPay\Lib\obj\AesObj;
-use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\FlashPay\Gateway;
 use Omnipay\Tests\GatewayTestCase;
@@ -16,7 +16,7 @@ class GatewayTest extends GatewayTestCase
     public function setUp(): void
     {
         parent::setUp();
-//        $this->gateway = new Gateway(new Client(new \Http\Client\Curl\Client()), $this->getHttpRequest());
+        //        $this->gateway = new Gateway(new Client(new \Http\Client\Curl\Client()), $this->getHttpRequest());
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->initialize([
             'HashKey' => 'hULtXjAWIHP6QDhLK1Oxp7Mi47MtPJwg',
@@ -131,7 +131,7 @@ class GatewayTest extends GatewayTestCase
 
     public function testVoidError()
     {
-        $this->expectException(InvalidRequestException::class);
+        $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('交易資料狀態不符');
 
         $this->getMockClient()->addResponse($this->getMockHttpResponse('VoidError.txt'));

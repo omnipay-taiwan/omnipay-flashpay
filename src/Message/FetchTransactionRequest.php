@@ -4,6 +4,7 @@ namespace Omnipay\FlashPay\Message;
 
 use FlashPay\Lib\Services\UtilService;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\FlashPay\Services\QueryOrderService;
 use Omnipay\FlashPay\Traits\HasDecode;
@@ -12,14 +13,15 @@ use Omnipay\FlashPay\Traits\HasOrdNo;
 
 class FetchTransactionRequest extends AbstractRequest
 {
+    use HasDecode;
     use HasFlashPay;
     use HasOrdNo;
-    use HasDecode;
 
     /**
      * @return array
      *
      * @throws InvalidRequestException
+     * @throws InvalidResponseException
      */
     public function getData()
     {

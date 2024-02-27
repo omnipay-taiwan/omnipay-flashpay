@@ -15,12 +15,12 @@ use Omnipay\FlashPay\Traits\HasTxType;
 
 class VoidRequest extends AbstractRequest
 {
+    use HasAmount;
+    use HasAmt;
+    use HasDecode;
     use HasFlashPay;
     use HasOrdNo;
     use HasTxType;
-    use HasAmt;
-    use HasDecode;
-    use HasAmount;
 
     /**
      * @return array

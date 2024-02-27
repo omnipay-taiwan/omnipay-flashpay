@@ -11,11 +11,12 @@ use Omnipay\FlashPay\Traits\HasFlashPay;
 
 class AcceptNotificationRequest extends AbstractRequest implements NotificationInterface
 {
-    use HasFlashPay;
     use HasDecode;
+    use HasFlashPay;
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     public function getData()

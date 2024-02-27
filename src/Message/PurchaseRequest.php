@@ -11,9 +11,9 @@ use Omnipay\FlashPay\Traits\HasFlashPay;
 
 class PurchaseRequest extends AbstractRequest
 {
-    use HasFlashPay;
-    use HasCreditCard;
     use HasAmount;
+    use HasCreditCard;
+    use HasFlashPay;
 
     /**
      * @return array

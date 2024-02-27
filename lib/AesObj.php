@@ -51,7 +51,7 @@ class AesObj
 
     public function getHASH($source)
     {
-        return  hash('sha256', $source);
+        return hash('sha256', $source);
     }
 
     public function getEnData($merID, $jsonStr)

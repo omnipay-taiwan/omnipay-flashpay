@@ -4,8 +4,8 @@ namespace Omnipay\FlashPay\Traits;
 
 trait HasCreditCard
 {
-    use HasOrdNo;
     use HasAmt;
+    use HasOrdNo;
     use HasTxType;
 
     /**

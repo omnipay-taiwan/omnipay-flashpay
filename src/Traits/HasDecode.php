@@ -2,7 +2,7 @@
 
 namespace Omnipay\FlashPay\Traits;
 
-use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Exception\InvalidResponseException;
 
 trait HasDecode
 {
@@ -10,7 +10,7 @@ trait HasDecode
      * @param  string  $input
      * @return array
      *
-     * @throws InvalidRequestException
+     * @throws InvalidResponseException
      */
     private function decode($input)
     {
@@ -18,11 +18,11 @@ trait HasDecode
         $data = json_decode($output, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new InvalidRequestException(json_last_error_msg().': '.$input);
+            throw new InvalidResponseException(json_last_error_msg().': '.$input);
         }
 
         if ($data['ret_code'] !== '00') {
-            throw new InvalidRequestException($data['ret_msg']);
+            throw new InvalidResponseException($data['ret_msg']);
         }
 
         return $data;
