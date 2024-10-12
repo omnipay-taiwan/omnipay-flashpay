@@ -16,7 +16,6 @@ trait HasDecode
     {
         $output = substr($input, 0, strrpos($input, '}') + 1);
         $data = json_decode($output, true);
-
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidResponseException(json_last_error_msg().': '.$input);
         }
