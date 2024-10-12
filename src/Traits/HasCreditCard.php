@@ -52,12 +52,12 @@ trait HasCreditCard
      */
     public function setPayType($value)
     {
-        return $this->setParameter('pay_type', $value);
+        return $this->setPaymentMethod($value);
     }
 
     public function getPayType()
     {
-        return $this->getParameter('pay_type');
+        return $this->getPaymentMethod();
     }
 
     /**
